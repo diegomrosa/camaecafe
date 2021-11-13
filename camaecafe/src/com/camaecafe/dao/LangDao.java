@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.camaecafe.Lang;
 
@@ -21,13 +23,14 @@ public class LangDao extends Dao {
 		super(db);
 	}
 
-	public List<Lang> readAll() throws DaoException {
+	public Map[] readAll() throws DaoException {
 		Statement stmt = getDb().createStatement();
 		ResultSet rs = null;
 		
 		try {
 			rs = getDb().executeQuery(stmt, SELECT_ALL);
-			List<Lang> langList = new ArrayList<Lang>();
+			Map<Long, Lang> langMapIds = new HashMap<Long, Lang>();
+			Map<String, Lang> langMapIsos = new HashMap<String, Lang>();
 			
 			while (rs.next()) {
 				Long id = Long.valueOf(rs.getLong(ID));
@@ -38,9 +41,10 @@ public class LangDao extends Dao {
 				String nativeName = rs.getString(NATIVE_NAME);
 				Lang lang = new Lang(id, lang6391, lang6392T, lang6392B, name, nativeName);
 				
-				langList.add(lang);
+				langMapIds.put(id, lang);
+				langMapIsos.put(lang6391, lang);
 			}
-			return langList;
+			return new Map[] {langMapIds, langMapIsos};
 		} catch (SQLException exc) {
 			throw new DaoException("Error traversing result set.", exc);
 		} finally {

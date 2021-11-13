@@ -10,7 +10,7 @@ CREATE TABLE lang (
     lang_639_2B VARCHAR(3) NOT NULL,
     lang_name VARCHAR(80) NOT NULL,
     native_name VARCHAR(80) NOT NULL,
-    PRIMARY KEY (`id`));
+    PRIMARY KEY (id));
 
 CREATE TABLE country (
     code CHAR(2) NOT NULL COMMENT 'Two-letter country code (ISO 3166-1 alpha-2)',
@@ -56,7 +56,8 @@ CREATE TABLE review (
     id BIGINT NOT NULL,
     send_date DATE,
     comments TEXT,
-    comments_lang_id BIGINT,
+    comments_lang_iso VARCHAR(5),
+    comments_lang_confidence VARCHAR(6),
     reviewer_id BIGINT,
     listing_id BIGINT NOT NULL,
     PRIMARY KEY (id));
@@ -68,7 +69,6 @@ ALTER TABLE listing ADD CONSTRAINT listing_host_fk FOREIGN KEY (host_id) REFEREN
 ALTER TABLE listing ADD CONSTRAINT listing_lang_fk FOREIGN KEY (description_lang_id) REFERENCES lang(id);
 ALTER TABLE review ADD CONSTRAINT review_reviewer_fk FOREIGN KEY (reviewer_id) REFERENCES airbnb_user(id);
 ALTER TABLE review ADD CONSTRAINT review_listing_fk FOREIGN KEY (listing_id) REFERENCES listing(id);
-ALTER TABLE review ADD CONSTRAINT review_lang_fk FOREIGN KEY (comments_lang_id) REFERENCES lang(id);
 
 INSERT INTO lang VALUES (0, "aa", "aar", "aar", "Afar", "Afaraf");
 INSERT INTO lang VALUES (NULL, "ab", "abk", "abk", "Abkhaz", "аҧсуа бызшәа, аҧсшәа");
